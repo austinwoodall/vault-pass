@@ -14,6 +14,7 @@ import { KeyRound } from "~/lib/icons/KeyRound";
 import { User } from "~/lib/icons/User";
 import { StickyNote } from "~/lib/icons/StickyNote";
 import useNewCredential from "~/components/hooks/use-add-credential";
+import { Platform } from "react-native";
 
 // Zod schema for email validation
 const schema = z.object({
@@ -49,7 +50,9 @@ export default function NewCredential() {
   };
 
   return (
-    <Box className="flex-1 flex-col p-3 px-4 ">
+    <Box
+      className={`flex-1 flex-col p-3 px-4 ${Platform.OS == "android" ? "pt-20" : ""}`}
+    >
       <Box className={"flex-row pb-2 justify-between"}>
         <Button
           onPress={() => router.back()}

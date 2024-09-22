@@ -2,9 +2,11 @@ import { H1 } from "@expo/html-elements";
 import { router } from "expo-router";
 import {
   ChevronDown,
+  ChevronLeft,
   ShieldCheckIcon,
   StickyNoteIcon,
 } from "lucide-react-native";
+import { Platform } from "react-native";
 import useCredential from "~/components/hooks/use-credential";
 import { Box } from "~/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "~/components/ui/button";
@@ -21,7 +23,9 @@ export default function Credential() {
   const { credentialData }: IData = useCredential();
 
   return (
-    <Box className={"flex-1 flex-col p-3 px-4 "}>
+    <Box
+      className={`flex-1 flex-col p-3 px-4 ${Platform.OS == "android" ? "pt-10" : ""}`}
+    >
       <Box className={"flex-row pb-2 justify-between"}>
         <Button
           onPress={() => router.back()}
@@ -29,7 +33,11 @@ export default function Credential() {
           variant="link"
         >
           <ButtonIcon className={"self-center"} size={"lg"}>
-            <ChevronDown color={"white"} size={20} />
+            {Platform.OS == "android" ? (
+              <ChevronLeft color={"white"} size={20} />
+            ) : (
+              <ChevronDown color={"white"} size={20} />
+            )}
           </ButtonIcon>
         </Button>
         <Button className="rounded-full bg-secondary-400" variant="solid">

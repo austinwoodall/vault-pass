@@ -1,6 +1,13 @@
 import { H1 } from "@expo/html-elements";
 import { router } from "expo-router";
-import { ChevronDown, ChevronRight, LogOut, Trash2 } from "lucide-react-native";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  Trash2,
+} from "lucide-react-native";
+import { Platform } from "react-native";
 import { useUser } from "~/components/hooks/use-user";
 import { Box } from "~/components/ui/box";
 import { ButtonIcon, Button } from "~/components/ui/button";
@@ -10,7 +17,9 @@ import { VStack } from "~/components/ui/vstack";
 export default function Acccount() {
   const { username } = useUser();
   return (
-    <Box className={"flex-1 flex-col p-3 px-4 "}>
+    <Box
+      className={`flex-1 flex-col p-3 px-4 ${Platform.OS == "android" ? "pt-10" : ""}`}
+    >
       <Box className={"flex-row pb-2 justify-between"}>
         <Button
           onPress={() => router.back()}
@@ -18,7 +27,11 @@ export default function Acccount() {
           variant="link"
         >
           <ButtonIcon className={"self-center"} size={"lg"}>
-            <ChevronDown color={"white"} size={20} />
+            {Platform.OS == "android" ? (
+              <ChevronLeft color={"white"} size={20} />
+            ) : (
+              <ChevronDown color={"white"} size={20} />
+            )}
           </ButtonIcon>
         </Button>
       </Box>
