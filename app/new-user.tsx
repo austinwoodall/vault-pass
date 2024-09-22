@@ -14,7 +14,7 @@ import {
   ToastTitle,
   useToast,
 } from "~/components/ui/toast";
-import { useGunAuth } from "~/components/providers/GunAuthProvider";
+import { useGun } from "~/components/providers/GunProvider";
 
 // Zod schema for email validation
 const schema = z.object({
@@ -35,24 +35,40 @@ export default function NewUser() {
     },
   });
   const toast = useToast();
-  const { signUp } = useGunAuth();
+  const { signup } = useGun();
   const onSubmit = async (data: any) => {
     try {
-      await signUp(data.username, data.password);
+      await signup(data.username, data.password);
       router.push("/");
-    } catch (e) {
-      return toast.show({
-        placement: "top",
-        duration: 5000,
-        render: () => {
-          return (
-            <Toast action="error" variant="outline">
-              <ToastTitle>{e.name}</ToastTitle>
-              <ToastDescription>{e.message}</ToastDescription>
-            </Toast>
-          );
-        },
-      });
+    } catch (e: any) {
+      console.log(e);
+      if (e !== undefined) {
+        return toast.show({
+          placement: "top",
+          duration: 5000,
+          render: () => {
+            return (
+              <Toast action="error" variant="outline">
+                <ToastTitle>{e.name ?? ""}</ToastTitle>
+                <ToastDescription>{e.message ?? ""}</ToastDescription>
+              </Toast>
+            );
+          },
+        });
+      } else {
+        return toast.show({
+          placement: "top",
+          duration: 5000,
+          render: () => {
+            return (
+              <Toast action="error" variant="outline">
+                <ToastTitle>Error</ToastTitle>
+                <ToastDescription>Something went wrong!</ToastDescription>
+              </Toast>
+            );
+          },
+        });
+      }
     }
   };
 

@@ -14,7 +14,7 @@ import {
   ToastTitle,
   useToast,
 } from "~/components/ui/toast";
-import { useGunAuth } from "~/components/providers/GunAuthProvider";
+import { useGun } from "~/components/providers/GunProvider";
 
 // Zod schema for email validation
 const schema = z.object({
@@ -36,11 +36,11 @@ export default function SignIn() {
   });
 
   const toast = useToast();
-  const { signIn } = useGunAuth();
+  const { login } = useGun();
 
   const onSubmit = async (data: any) => {
     try {
-      await signIn(data.username, data.password);
+      await login(data.username, data.password);
       router.push("/");
     } catch (e) {
       console.log(JSON.stringify(e));

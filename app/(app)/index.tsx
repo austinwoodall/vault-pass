@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   EllipsisVerticalIcon,
   LogOut,
@@ -14,15 +14,33 @@ import { Search } from "~/lib/icons/Search";
 import { Button, ButtonText } from "~/components/ui/button";
 import { VStack } from "~/components/ui/vstack";
 import { Menu, MenuItem, MenuItemLabel } from "~/components/ui/menu";
-import { useGunAuth } from "~/components/providers/GunAuthProvider";
+import { useGun } from "~/components/providers/GunProvider";
 import PasswordGenerator from "~/components/PasswordGenerator";
-import { ScrollView } from "react-native";
+import { Alert, Pressable, ScrollView } from "react-native";
+import { useUser } from "~/components/hooks/use-user";
+import useVault from "~/components/hooks/use-vault";
 
 export default function Home() {
   const [openGenerator, setOpenGenerator] = useState(false);
-  const { user, signOut } = useGunAuth();
-  // const { data }: any = useVault();
-  const data = {};
+  const [data, setData] = useState([]);
+  const { logout, isLoading, user, gun } = useGun();
+  const { username } = useUser();
+
+  const { data: vault }: any = useVault();
+
+  useEffect(() => {
+    if (vault.length) {
+      setData(vault);
+    }
+  }, [vault]);
+
+  function searchCredentials(value: string) {
+    console.log(JSON.stringify(value, null, 2));
+    const filteredData = vault.filter((item: any) =>
+      item?.title.toLowerCase().includes(value.toLowerCase())
+    );
+    setData(filteredData);
+  }
 
   return (
     <>
@@ -30,7 +48,7 @@ export default function Home() {
         <Box className="fle flex-row justify-between items-center">
           <VStack className="gap-1 mb-6">
             <Text className="text-xl text-black font-bold m-0">
-              Hello, {user?.username}.
+              Hello, {username}.
             </Text>
             <Text className="text-md">
               Save your passwords safely and securely.
@@ -45,6 +63,15 @@ export default function Home() {
             )}
           >
             <MenuItem
+              key="Add account1"
+              className="gap-2"
+              textValue="Settings"
+              onPress={() => router.push("/account")}
+            >
+              <User color={"black"} size={16} />
+              <MenuItemLabel size="md">Account</MenuItemLabel>
+            </MenuItem>
+            <MenuItem
               key="Add account0"
               className="gap-2"
               textValue="Password generator"
@@ -54,12 +81,20 @@ export default function Home() {
               <MenuItemLabel size="md">Password generator</MenuItemLabel>
             </MenuItem>
 
-            <MenuItem key="Add account1" className="gap-2" textValue="Settings">
-              <User color={"black"} size={16} />
-              <MenuItemLabel size="md">Profile</MenuItemLabel>
-            </MenuItem>
             <MenuItem
-              onPress={signOut}
+              onPress={() =>
+                Alert.alert("Do you want to log out?", "", [
+                  {
+                    text: "Cancel",
+                    onPress: () => null,
+                  },
+                  {
+                    text: "Log out",
+                    onPress: () => logout(),
+                    style: "destructive",
+                  },
+                ])
+              }
               key="Sign out"
               className="gap-2"
               textValue="Sign out"
@@ -76,23 +111,35 @@ export default function Home() {
                 <Search className="text-slate-500" />
               </InputIcon>
             </InputSlot>
-            <InputField placeholder="Search password credentials" />
+            <InputField
+              onChangeText={(text) => searchCredentials(text)}
+              placeholder="Search password credentials"
+            />
           </Input>
-          <ScrollView className="flex-1">
+          <ScrollView className="flex-1 pt-4">
             {data.length ? (
               <Box className="gap-2">
                 {data.map((item: any) => (
-                  <Box
-                    key={item.id}
-                    onPress={router.push({
-                      pathname: "/(app)/details",
-                      params: { id: item.id },
-                    })}
-                    className="p-4 rounded-md"
+                  <Pressable
+                    key={item?._["#"] ?? null}
+                    onPress={() =>
+                      router.navigate({
+                        pathname: "/details",
+                        params: { id: item._["#"] },
+                      })
+                    }
+                    className="flex-1 flex-row"
                   >
-                    <Text className=" text-xl">{item.title}</Text>
-                    <Text className="">{item.email}</Text>
-                  </Box>
+                    <Box className="w-12 h-12 self-center items-center justify-center rounded-xl bg-white">
+                      <Text className="text-md font-bold">
+                        {item?.title?.toUpperCase().substring(0, 2)}
+                      </Text>
+                    </Box>
+                    <Box className="flex-col p-4 rounded-md">
+                      <Text className=" text-xl">{item?.title}</Text>
+                      <Text className="">{item?.username}</Text>
+                    </Box>
+                  </Pressable>
                 ))}
               </Box>
             ) : (

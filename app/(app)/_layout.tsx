@@ -1,25 +1,16 @@
-import { router, Stack } from "expo-router";
-import { useContext, useEffect } from "react";
+import { Redirect, useSegments } from "expo-router";
+import { Stack } from "expo-router";
 import { View, ActivityIndicator } from "react-native";
-import { GunAuthContext } from "~/components/providers/GunAuthProvider";
+import { useGun } from "~/components/providers/GunProvider";
 import { ModalProvider } from "~/components/providers/ModalProvider";
 import { Text } from "~/components/ui/text";
 
 export default function AppLayout() {
-  const auth = useContext(GunAuthContext);
-  const { user, loading } = auth;
+  const { user, isLoading } = useGun();
+  const segments = useSegments();
 
-  console.log({ user, loading });
-
-  useEffect(() => {
-    if (!loading && !user) {
-      console.log("Redirecting...");
-      return router.replace("/start-auth");
-    }
-  }, [user, loading]);
-
-  if (loading) {
-    // Show loading screen while checking authentication
+  // If user is undefined, we're still loading
+  if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -28,15 +19,22 @@ export default function AppLayout() {
     );
   }
 
+  // If user is null, redirect to start-auth
+  if (user === null) {
+    return <Redirect href={"/start-auth"} />;
+  }
+
+  // If user is logged in, render the main app layout
   return (
     <ModalProvider>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack screenOptions={{ headerShown: false }} initialRouteName="index">
         <Stack.Screen name="index" />
         <Stack.Screen
           name="new-credential"
           options={{ presentation: "modal" }}
         />
         <Stack.Screen name="details" options={{ presentation: "modal" }} />
+        <Stack.Screen name="account" options={{ presentation: "modal" }} />
       </Stack>
     </ModalProvider>
   );

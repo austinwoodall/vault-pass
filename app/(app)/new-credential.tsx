@@ -11,26 +11,23 @@ import { Text } from "~/components/ui/text";
 import { VStack } from "~/components/ui/vstack";
 import { Earth } from "~/lib/icons/Earth";
 import { KeyRound } from "~/lib/icons/KeyRound";
-import { Mail } from "~/lib/icons/Mail";
 import { User } from "~/lib/icons/User";
 import { StickyNote } from "~/lib/icons/StickyNote";
 import useNewCredential from "~/components/hooks/use-add-credential";
 
 // Zod schema for email validation
 const schema = z.object({
-  title: z.string().min(0), // Optional
-  username: z.string().min(0, { message: "Username cannot be empty" }),
-  email: z.string().min(0),
-  password: z.string().min(0, { message: "Password cannot be empty." }),
-  website: z.string().min(0), // Optional
+  title: z.string().min(1),
+  username: z.string().min(1, { message: "Username/Email cannot be empty" }),
+  password: z.string().min(1, { message: "Password cannot be empty." }),
+  website: z.string().min(1),
   notes: z.string().min(0), // Optional,
-  created_at: z.date(),
 });
 
 export type AddEntry = z.infer<typeof schema>;
 
 export default function NewCredential() {
-  const { newEntry } = useNewCredential();
+  const { newEntry, error } = useNewCredential();
   const {
     control,
     handleSubmit,
@@ -40,16 +37,15 @@ export default function NewCredential() {
     defaultValues: {
       title: "",
       username: "",
-      email: "",
       password: "",
       website: "",
       notes: "",
-      created_at: new Date().toISOString(),
     },
   });
+
   const onSubmit: SubmitHandler<AddEntry> = (data) => {
     newEntry(data);
-    router.back();
+    // router.back();
   };
 
   return (
@@ -88,6 +84,8 @@ export default function NewCredential() {
                 render={({ field }) => (
                   <Input size="xl" className="border-0 rounded-lg">
                     <InputField
+                      autoCorrect={false}
+                      className={"text-4xl font-bold"}
                       autoFocus
                       onChangeText={field.onChange}
                       value={field.value}
@@ -100,41 +98,25 @@ export default function NewCredential() {
             <VStack className="flex flex-row items-center bg-slate-200 rounded-xl p-4">
               <User className="text-slate-500" size={20} />
               <Box className="flex-1">
-                <Text className="ml-3 text-primary-400">Username</Text>
+                <Text className="ml-3 text-primary-400">Username or Email</Text>
                 <Controller
                   control={control}
                   name="username"
                   render={({ field }) => (
                     <Input size="xl" className="border-0 rounded-lg">
                       <InputField
+                        autoCapitalize={"none"}
+                        autoCorrect={false}
                         value={field.value}
                         onChangeText={field.onChange}
-                        placeholder="Add username"
+                        placeholder="Add username or email"
                       />
                     </Input>
                   )}
                 />
               </Box>
             </VStack>
-            <VStack className="flex flex-row items-center bg-slate-200 rounded-xl p-4">
-              <Mail className="text-slate-500" size={20} />
-              <Box className="flex-1">
-                <Text className="ml-3 text-primary-400">Email address</Text>
-                <Controller
-                  control={control}
-                  name={"email"}
-                  render={({ field }) => (
-                    <Input size="xl" className="border-0">
-                      <InputField
-                        value={field.value}
-                        onChangeText={field.onChange}
-                        placeholder="Add email address"
-                      />
-                    </Input>
-                  )}
-                />
-              </Box>
-            </VStack>
+
             <VStack className="flex flex-row items-center bg-slate-200 rounded-xl p-4">
               <KeyRound className="text-slate-500" size={20} />
               <Box className="flex-1">
@@ -145,6 +127,8 @@ export default function NewCredential() {
                   render={({ field }) => (
                     <Input size="lg" className="border-0">
                       <InputField
+                        autoCapitalize={"none"}
+                        autoCorrect={false}
                         value={field.value}
                         onChangeText={field.onChange}
                         placeholder="Add password"
@@ -165,9 +149,18 @@ export default function NewCredential() {
                   render={({ field }) => (
                     <Input size="lg" className="border-0">
                       <InputField
+                        autoCapitalize={"none"}
+                        keyboardType={"url"}
                         value={field.value}
-                        onChangeText={field.onChange}
+                        onChangeText={(text) => {
+                          const sanitizedText = text.replace(
+                            /^https?:\/\//,
+                            ""
+                          );
+                          field.onChange(sanitizedText);
+                        }}
                         placeholder="https://"
+                        onBlur={field.onBlur}
                       />
                     </Input>
                   )}

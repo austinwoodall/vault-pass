@@ -1,26 +1,26 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useGun } from "../providers/GunProvider";
+import CryptosEs from "crypto-es";
 
 export default function useNewCredential() {
-  const gun = useGun();
-  const queryClient = useQueryClient();
+  const { gun } = useGun();
+  const [error, setError] = useState<string | null>(null);
 
-  const { mutateAsync: newEntry } = useMutation({
-    mutationFn: (data) =>
-      gun.user("vault").set(data, (ack: any) => {
-        if (ack.err) {
-          console.log("Error creating new credential:", ack.err);
-        } else {
-          console.log("New credential created successfully");
-        }
-      }),
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["vault"] });
-    },
-    onError: (error) => {
-      throw new Error(error.message);
-    },
-  });
+  const user = gun.user();
 
-  return { newEntry };
+  const newEntry = async (data: any) => {
+    const encryptPass = CryptosEs.AES.encrypt(
+      data.password,
+      user._.sea.pub
+    ).toString();
+    console.log({ encryptPass });
+
+    gun
+      .user()
+      .get("vault")
+      .set({ ...data, password: encryptPass })
+      .then((newE: any) => console.log({ newE }));
+  };
+
+  return { newEntry, error };
 }

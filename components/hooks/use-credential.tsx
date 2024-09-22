@@ -1,28 +1,27 @@
+import { useState } from "react";
 import { useGun } from "../providers/GunProvider";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useLocalSearchParams } from "expo-router";
 
-export default function useCredential(id: string[] | string) {
-  const gun = useGun();
-  const { data, error } = useSuspenseQuery({
-    queryKey: ["vault", id],
-    queryFn: async () => {
-      return new Promise((resolve, reject) => {
-        if (error) {
-          reject(error);
+export default function useCredential() {
+  const { id } = useLocalSearchParams();
+  const { gun } = useGun();
+  const [credentialData, setCredential] = useState();
+  new Promise((resolve, reject) => {
+    gun
+      .user()
+      .get("vault")
+      .map()
+      .once((data: any, key: string) => {
+        if (key === id) {
+          console.log(data);
+          setCredential(data);
+          resolve(data);
         }
-        const vaultData = gun
-          .user("vault")
-          .get(id)
-          .on(async (data: any) => {
-            if (data) {
-              return data;
-            }
-          });
-
-        setTimeout(() => resolve(vaultData), 500);
       });
-    },
+
+    // Reject if not found after a timeout
+    setTimeout(() => reject(new Error("Node not found")), 5000);
   });
 
-  return { data, error };
+  return { credentialData };
 }

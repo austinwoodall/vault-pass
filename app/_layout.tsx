@@ -6,7 +6,6 @@ import { Slot, SplashScreen } from "expo-router";
 import { NAV_THEME } from "~/lib/constants";
 import { GluestackUIProvider } from "~/components/ui/gluestack-ui-provider";
 import { GunProvider } from "~/components/providers/GunProvider";
-import { GunAuthProvider } from "~/components/providers/GunAuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 
@@ -38,13 +37,11 @@ export default function RootLayout() {
 
   return (
     <GunProvider>
-      <GunAuthProvider>
-        <GluestackUIProvider mode="light">
-          <QueryClientProvider client={queryClient}>
-            <Slot />
-          </QueryClientProvider>
-        </GluestackUIProvider>
-      </GunAuthProvider>
+      <GluestackUIProvider mode="light">
+        <QueryClientProvider client={queryClient}>
+          <Slot />
+        </QueryClientProvider>
+      </GluestackUIProvider>
     </GunProvider>
   );
 }
