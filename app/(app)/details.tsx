@@ -24,7 +24,7 @@ export default function Credential() {
 
   return (
     <Box
-      className={`flex-1 flex-col p-3 px-4 ${Platform.OS == "android" ? "pt-10" : ""}`}
+      className={`flex-1 flex-col p-3 px-4 ${Platform.OS == "android" ? "pt-14 " : ""}`}
     >
       <Box className={"flex-row pb-2 justify-between"}>
         <Button
