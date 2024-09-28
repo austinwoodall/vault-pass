@@ -85,7 +85,8 @@
     "ws": "^8.18.0",
     "zod": "^3.23.8",
     "zustand": "^4.4.7",
-    "expo-updates": "~0.25.25"
+    "expo-updates": "~0.25.25",
+    "expo-constants": "~16.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
