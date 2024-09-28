@@ -19,6 +19,7 @@ import PasswordGenerator from "~/components/PasswordGenerator";
 import { Alert, Pressable, ScrollView } from "react-native";
 import { useUser } from "~/components/hooks/use-user";
 import useVault from "~/components/hooks/use-vault";
+import StatusBarAwareView from "~/components/StatusBarAwareView";
 
 export default function Home() {
   const [openGenerator, setOpenGenerator] = useState(false);
@@ -44,7 +45,7 @@ export default function Home() {
 
   return (
     <>
-      <Box className="flex-1 pt-16 px-5">
+      <StatusBarAwareView classNames="flex-1 px-5">
         <Box className="fle flex-row justify-between items-center">
           <VStack className="gap-1 mb-6">
             <Text className="text-xl text-black font-bold m-0">
@@ -161,7 +162,7 @@ export default function Home() {
             <ButtonText>Add Credential</ButtonText>
           </Button>
         </Box>
-      </Box>
+      </StatusBarAwareView>
       <PasswordGenerator
         isOpen={openGenerator}
         handleOpen={setOpenGenerator}
