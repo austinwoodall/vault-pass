@@ -7,7 +7,7 @@ import {
   LogOut,
   Trash2,
 } from "lucide-react-native";
-import { Platform } from "react-native";
+import { Platform, Pressable } from "react-native";
 import { useUser } from "~/components/hooks/use-user";
 import { Box } from "~/components/ui/box";
 import { ButtonIcon, Button } from "~/components/ui/button";
@@ -57,16 +57,18 @@ export default function Acccount() {
                 </Box>
               </Box>
             </Box>
-            <Box
-              className={
-                "border-x border-y border-secondary-200 px-4 py-6 rounded-xl"
-              }
-            >
-              <Box className="lex flex-row items-center justify-between">
-                <Text className="text-xl">Change password</Text>
-                <ChevronRight color={"grey"} />
+            <Pressable onPress={() => router.push("/change-password")}>
+              <Box
+                className={
+                  "border-x border-y border-secondary-200 px-4 py-6 rounded-xl"
+                }
+              >
+                <Box className="lex flex-row items-center justify-between">
+                  <Text className="text-xl">Change password</Text>
+                  <ChevronRight color={"grey"} />
+                </Box>
               </Box>
-            </Box>
+            </Pressable>
             <Box
               className={
                 "border-x border-y border-secondary-200 px-4 py-6 rounded-xl"
