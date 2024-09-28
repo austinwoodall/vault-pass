@@ -73,9 +73,9 @@ export default function NewUser() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headContainer}>
-        <View style={styles.headerContainer}>
+    <View className={"flex-1"}>
+      <View className={"flex-1"}>
+        <View className={"flex-1 bg-gray-200 justify-center pt-20"}>
           <Text style={styles.h1}>
             Great. Let's setup your VaultPass account.
           </Text>

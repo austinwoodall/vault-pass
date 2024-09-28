@@ -60,9 +60,9 @@ export default function SignIn() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headContainer}>
-        <View style={styles.headerContainer}>
+    <View className={"flex-1 "}>
+      <View className={"flex-1"}>
+        <View className={"flex-1 bg-gray-200 justify-center pt-20"}>
           <Text style={styles.h1}>Sign in with password</Text>
           <Text style={styles.subHeader}>It's great to see you again!</Text>
         </View>
@@ -72,7 +72,7 @@ export default function SignIn() {
               control={control}
               name="username"
               render={({ field: { onChange, onBlur, value } }) => (
-                <Input>
+                <Input size="xl">
                   <InputField
                     autoCorrect={false}
                     autoFocus
@@ -96,7 +96,7 @@ export default function SignIn() {
               control={control}
               name="password"
               render={({ field: { onChange, onBlur, value } }) => (
-                <Input>
+                <Input size="xl">
                   <InputField
                     autoCorrect={false}
                     onBlur={onBlur}
@@ -136,9 +136,6 @@ export default function SignIn() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   inputContainer: {
     marginHorizontal: 30,
     paddingTop: 60,
