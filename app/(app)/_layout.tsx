@@ -33,8 +33,16 @@ export default function AppLayout() {
           name="new-credential"
           options={{ presentation: "modal" }}
         />
-        <Stack.Screen name="details" options={{ presentation: "formSheet" }} />
+        <Stack.Screen name="details" options={{ presentation: "modal" }} />
         <Stack.Screen name="account" options={{ presentation: "modal" }} />
+        <Stack.Screen
+          name="change-password"
+          options={{ presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="edit-credential"
+          options={{ presentation: "modal" }}
+        />
       </Stack>
     </ModalProvider>
   );
