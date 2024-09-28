@@ -14,6 +14,7 @@ import { KeyRound } from "~/lib/icons/KeyRound";
 import { User } from "~/lib/icons/User";
 import { StickyNote } from "~/lib/icons/StickyNote";
 import useNewCredential from "~/components/hooks/use-add-credential";
+import Constants from "expo-constants";
 import { Platform } from "react-native";
 
 // Zod schema for email validation
@@ -46,12 +47,15 @@ export default function NewCredential() {
 
   const onSubmit: SubmitHandler<AddEntry> = (data) => {
     newEntry(data);
-    // router.back();
+    router.back();
   };
 
   return (
     <Box
-      className={`flex-1 flex-col p-3 px-4 ${Platform.OS == "android" ? "pt-14" : ""}`}
+      className={`flex-1 flex-col p-3 px-4`}
+      style={{
+        paddingTop: Platform.OS == "android" ? Constants.statusBarHeight : 10,
+      }}
     >
       <Box className={"flex-row pb-2 justify-between"}>
         <Button
