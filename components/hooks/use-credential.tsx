@@ -13,7 +13,6 @@ export default function useCredential() {
       .map()
       .once((data: any, key: string) => {
         if (key === id) {
-          console.log(data);
           setCredential(data);
           resolve(data);
         }

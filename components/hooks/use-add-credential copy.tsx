@@ -1,22 +1,14 @@
 import { useState } from "react";
 import { useGun } from "../providers/GunProvider";
-import CryptosEs from "crypto-es";
 
-export default function useNewCredential() {
+export default function useEditCredential(id: string) {
   const { gun } = useGun();
   const [error, setError] = useState<string | null>(null);
 
   const user = gun.user();
 
-  const newEntry = async (data: any) => {
-    const encryptPass = CryptosEs.AES.encrypt(
-      data.password,
-      user._.sea.pub
-    ).toString();
-    console.log({ encryptPass });
-
-    gun
-      .user()
+  const editEntry = async (data: any) => {
+    user
       .get("vault")
       .set({
         ...data,
@@ -26,5 +18,5 @@ export default function useNewCredential() {
       .then((newE: any) => console.log({ newE }));
   };
 
-  return { newEntry, error };
+  return { editEntry, error };
 }
