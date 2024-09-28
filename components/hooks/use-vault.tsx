@@ -13,16 +13,12 @@ function decryptData(encryptedData: any, decryptionKey: any) {
 }
 
 export default function useVault() {
-  const { gun, user, isLoading, isLoggingOut } = useGun();
+  const { gun } = useGun();
   const [data, setData] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const processVaultItem = useCallback(
     (data: any) => {
-      console.log(data);
       data.password = decryptData(data.password, gun.user()._.sea.pub);
-      console.log(data.password);
       setData((prev) => {
         const isDuplicate = prev.some((item) => item._["#"] == data._["#"]);
         if (isDuplicate) {
