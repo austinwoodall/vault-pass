@@ -13,7 +13,10 @@ import { Earth } from "~/lib/icons/Earth";
 import { KeyRound } from "~/lib/icons/KeyRound";
 import { User } from "~/lib/icons/User";
 import { StickyNote } from "~/lib/icons/StickyNote";
-import useNewCredential from "~/components/hooks/use-add-credential";
+import useCredential from "~/components/hooks/use-credential";
+import { useEffect } from "react";
+import { Platform } from "react-native";
+import Constants from "expo-constants";
 
 // Zod schema for email validation
 const schema = z.object({
@@ -27,10 +30,12 @@ const schema = z.object({
 export type AddEntry = z.infer<typeof schema>;
 
 export default function EditCredential() {
-  const { newEntry, error } = useNewCredential();
+  const { credentialData } = useCredential();
+
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(schema),
@@ -43,13 +48,27 @@ export default function EditCredential() {
     },
   });
 
+  useEffect(() => {
+    if (credentialData) {
+      setValue("title", credentialData.title);
+      setValue("username", credentialData.username);
+      setValue("password", credentialData.password);
+      setValue("website", credentialData.website);
+      setValue("notes", credentialData.notes);
+    }
+  }, [credentialData]);
+
   const onSubmit: SubmitHandler<AddEntry> = (data) => {
-    newEntry(data);
     // router.back();
   };
 
   return (
-    <Box className="flex-1 flex-col p-3 px-4 ">
+    <Box
+      className="flex-1 flex-col p-3 px-4"
+      style={{
+        paddingTop: Platform.OS == "android" ? Constants.statusBarHeight : 10,
+      }}
+    >
       <Box className={"flex-row pb-2 justify-between"}>
         <Button
           onPress={() => router.back()}
@@ -66,7 +85,7 @@ export default function EditCredential() {
           variant="solid"
         >
           <ButtonText size="lg" className={"text-white"}>
-            Create
+            Save
           </ButtonText>
         </Button>
       </Box>
