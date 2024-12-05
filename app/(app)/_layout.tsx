@@ -1,4 +1,4 @@
-import { Redirect, useSegments } from "expo-router";
+import { Redirect } from "expo-router";
 import { Stack } from "expo-router";
 import { View, ActivityIndicator } from "react-native";
 import { useGun } from "~/components/providers/GunProvider";
@@ -7,7 +7,6 @@ import { Text } from "~/components/ui/text";
 
 export default function AppLayout() {
   const { user, isLoading } = useGun();
-  const segments = useSegments();
 
   // If user is undefined, we're still loading
   if (isLoading) {

@@ -24,7 +24,7 @@ import StatusBarAwareView from "~/components/StatusBarAwareView";
 export default function Home() {
   const [openGenerator, setOpenGenerator] = useState(false);
   const [data, setData] = useState([]);
-  const { logout, isLoading, user, gun } = useGun();
+  const { logout } = useGun();
   const { username } = useUser();
 
   const { data: vault }: any = useVault();
@@ -35,8 +35,9 @@ export default function Home() {
     }
   }, [vault]);
 
+  console.log({ vault });
+
   function searchCredentials(value: string) {
-    console.log(JSON.stringify(value, null, 2));
     const filteredData = vault.filter((item: any) =>
       item?.title.toLowerCase().includes(value.toLowerCase())
     );

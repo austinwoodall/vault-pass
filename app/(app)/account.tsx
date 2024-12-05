@@ -8,6 +8,7 @@ import {
   Trash2,
 } from "lucide-react-native";
 import { Platform, Pressable } from "react-native";
+import { useDeleteUser } from "~/components/hooks/use-delete-user";
 import { useUser } from "~/components/hooks/use-user";
 import { Box } from "~/components/ui/box";
 import { ButtonIcon, Button } from "~/components/ui/button";
@@ -16,6 +17,7 @@ import { VStack } from "~/components/ui/vstack";
 
 export default function Acccount() {
   const { username } = useUser();
+  const { deleteUser } = useDeleteUser();
   return (
     <Box
       className={`flex-1 flex-col p-3 px-4 ${Platform.OS == "android" ? "pt-14" : ""}`}
@@ -82,16 +84,18 @@ export default function Acccount() {
           </Box>
         </Box>
         <Box className="mb-20">
-          <Box
-            className={
-              "border-x border-y border-secondary-200 px-4 py-6 rounded-xl"
-            }
-          >
-            <Box className="lex flex-row items-center justify-between">
-              <Text className="text-xl color-red-600">Delete account</Text>
-              <Trash2 color={"red"} />
+          <Pressable onPress={deleteUser}>
+            <Box
+              className={
+                "border-x border-y border-secondary-200 px-4 py-6 rounded-xl"
+              }
+            >
+              <Box className="lex flex-row items-center justify-between">
+                <Text className="text-xl color-red-600">Delete account</Text>
+                <Trash2 color={"red"} />
+              </Box>
             </Box>
-          </Box>
+          </Pressable>
           <Box>
             <Text>
               This will permanently delete your VaultPass account and all of its

@@ -16,21 +16,21 @@ export default function useVault() {
   const { gun } = useGun();
   const [data, setData] = useState<any[]>([]);
 
-  const processVaultItem = useCallback(
-    (data: any) => {
-      data.password = decryptData(data.password, gun.user()._.sea.pub);
-      setData((prev) => {
-        const isDuplicate = prev.some((item) => item._["#"] == data._["#"]);
-        if (isDuplicate) {
-          return [...prev];
-        } else {
-          return [...prev, data];
-        }
-      });
-      return [];
-    },
-    [gun]
-  );
+  const processVaultItem = useCallback((data: any, key: string) => {
+    if (data) {
+      console.log("Matching document:", data._["#"]);
+    }
+    data.password = decryptData(data.password, gun.user()._.sea.pub);
+    setData((prev) => {
+      const isDuplicate = prev.some((item) => item._["#"] == data._["#"]);
+      if (isDuplicate) {
+        return [...prev];
+      } else {
+        return [...prev, data];
+      }
+    });
+    return [];
+  }, []);
 
   useEffect(() => {
     const unsubscribe = gun.user().get("vault").map().on(processVaultItem);
